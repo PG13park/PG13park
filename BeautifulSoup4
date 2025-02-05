@@ -1,1 +1,31 @@
+import requests
+from bs4 import BeautifulSoup
 
+# Function to scrape website text
+def scrape_website(url):
+    try:
+        # Send HTTP request to get website content
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()  # Raise error for HTTP issues
+
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Extract and clean all visible text
+        text = soup.get_text(separator="\n", strip=True)
+
+        # Display the extracted text
+        print("\n--- Extracted Text ---\n")
+        print(text)
+
+        # Optional: Save the text to a file
+        with open("website_text.txt", "w", encoding="utf-8") as file:
+            file.write(text)
+            print("\nText saved to 'website_text.txt'.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+
+# Example website (replace with your desired URL)
+url = input("Enter website URL: ")
+scrape_website(url)
